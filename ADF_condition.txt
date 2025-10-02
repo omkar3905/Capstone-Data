@@ -1,0 +1,19 @@
+
+@and(
+    equals(activity('Validation_SQL').Status,'Succeeded'),
+    and(
+        equals(activity('Validation_CSV').Status,'Succeeded'),
+        and(
+            equals(activity('Validation_JSON').Status,'Succeeded'),
+            and(
+                equals(activity('Copy_SQL_to_Bronze').Status,'Succeeded'),
+                and(
+                    equals(activity('Copy_RawCSV_to_Bronze').Status,'Succeeded'),
+                    equals(activity('Copy_RawJSON_to_Bronze').Status,'Succeeded')
+                )
+            )
+        )
+    )
+)
+
+

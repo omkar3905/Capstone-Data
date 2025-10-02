@@ -1,0 +1,41 @@
+
+provider "azurerm" {
+  features {}
+  subscription_id = "9ecede26-932c-46a9-89d6-cf3ca23c4a58"
+}
+
+resource "azurerm_resource_group" "capstone_rg" {
+  name     = "capstone-rg1"
+  location = "East US"
+}
+
+resource "azurerm_storage_account" "blob" {
+  name                     = "capstoneblobsa"
+  resource_group_name      = azurerm_resource_group.capstone_rg.name
+  location                 = azurerm_resource_group.capstone_rg.location
+  account_tier             = "Standard"
+  account_replication_type = "LRS"
+}
+
+resource "azurerm_data_factory" "adf" {
+  name                = "capstone-adf-92526"
+  location            = azurerm_resource_group.capstone_rg.location
+  resource_group_name = azurerm_resource_group.capstone_rg.name
+}
+
+resource "azurerm_databricks_workspace" "dbw" {
+  name                = "capstone-dbw"
+  location            = azurerm_resource_group.capstone_rg.location
+  resource_group_name = azurerm_resource_group.capstone_rg.name
+  sku                 = "standard"
+}
+
+output "storage_account_connection_string" {
+  value     = azurerm_storage_account.blob.primary_connection_string
+  sensitive = true
+}
+
+output "databricks_workspace_url" {
+  value = azurerm_databricks_workspace.dbw.workspace_url
+}
+
